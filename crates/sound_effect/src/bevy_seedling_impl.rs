@@ -69,21 +69,6 @@ pub struct Mode {
     pub deferred: bool,
 }
 
-#[derive(Component)]
-#[cfg_attr(feature = "debug", derive(Debug))]
-#[cfg_attr(feature = "reflect", derive(Reflect), reflect(Component))]
-#[cfg_attr(all(feature = "reflect", feature = "debug"), reflect(Debug))]
-pub struct SoundEffectPlayer<K: SoundEffectKeyRequirements> {
-    pub key: K,
-}
-
-impl<K: SoundEffectKeyRequirements> SoundEffectPlayer<K> {
-    /// Creates a new sound effect player.
-    pub fn new(key: K) -> SoundEffectPlayer<K> {
-        SoundEffectPlayer { key }
-    }
-}
-
 /// Settings for spatial sound effects.
 ///
 /// This resource allows configuring the [`SpatialBasicNode`] used for spatial
@@ -117,6 +102,21 @@ impl SpatialSoundEffectSettings {
             distance_attenuation: self.distance_attenuation,
             ..SpatialBasicNode::default()
         }
+    }
+}
+
+#[derive(Component)]
+#[cfg_attr(feature = "debug", derive(Debug))]
+#[cfg_attr(feature = "reflect", derive(Reflect), reflect(Component))]
+#[cfg_attr(all(feature = "reflect", feature = "debug"), reflect(Debug))]
+pub struct SoundEffectPlayer<K: SoundEffectKeyRequirements> {
+    pub key: K,
+}
+
+impl<K: SoundEffectKeyRequirements> SoundEffectPlayer<K> {
+    /// Creates a new sound effect player.
+    pub fn new(key: K) -> SoundEffectPlayer<K> {
+        SoundEffectPlayer { key }
     }
 }
 
