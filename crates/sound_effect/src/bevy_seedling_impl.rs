@@ -126,7 +126,6 @@ fn on_sound_effect_player_added<SoundEffectKeyT>(
     add: On<Add, SoundEffectPlayer<SoundEffectKeyT>>,
     mut commands: Commands,
     mut rng: Single<&mut WyRand, With<GlobalRng>>,
-    audio_sample_assets: Res<Assets<AudioSample>>,
     sample_rate: Res<SampleRate>,
     sound_config: Res<SoundConfig>,
     packet_assets: Res<Assets<PacketAsset>>,
@@ -166,7 +165,6 @@ fn on_sound_effect_player_added<SoundEffectKeyT>(
         SfxType::RandomLooping => play_random_looping_sound_effect(
             commands.reborrow(),
             &mut rng,
-            &audio_sample_assets,
             &sample_rate,
             &sound_config,
             packet_handle,
@@ -190,7 +188,6 @@ struct SoundPlayerData {
 /// loading fails.
 fn load_sound(
     rng: &mut impl Rng,
-    audio_sample_assets: &Res<Assets<AudioSample>>,
     sample_rate: &Res<SampleRate>,
     sound_config: &Res<SoundConfig>,
     packet: &PacketAsset,
@@ -198,10 +195,6 @@ fn load_sound(
 ) -> Option<SoundPlayerData> {
     let source = packet.audio_sample_handle(sound).or_else(|| {
         error!("Audio sample handle does not exist");
-        None
-    })?;
-    let audio_sample = audio_sample_assets.get(source.id()).or_else(|| {
-        error!("Audio sample asset not loaded");
         None
     })?;
 
@@ -218,7 +211,6 @@ fn load_sound(
 fn play_random_looping_sound_effect(
     mut commands: Commands,
     rng: &mut impl Rng,
-    audio_sample_assets: &Res<Assets<AudioSample>>,
     sample_rate: &Res<SampleRate>,
     sound_config: &Res<SoundConfig>,
     packet_handle: Handle<PacketAsset>,
@@ -237,14 +229,7 @@ fn play_random_looping_sound_effect(
         error!("Random sound does not exist");
         return;
     };
-    let Some(data) = load_sound(
-        rng,
-        audio_sample_assets,
-        sample_rate,
-        sound_config,
-        packet,
-        &sound,
-    ) else {
+    let Some(data) = load_sound(rng, sample_rate, sound_config, packet, &sound) else {
         return;
     };
 
@@ -345,7 +330,6 @@ fn on_random_looping_sound_player_removed(
     remove: On<Remove, SamplePlayer>,
     mut commands: Commands,
     mut rng: Single<&mut WyRand, With<GlobalRng>>,
-    audio_sample_assets: Res<Assets<AudioSample>>,
     sample_rate: Res<SampleRate>,
     sound_config: Res<SoundConfig>,
     packet_assets: Res<Assets<PacketAsset>>,
@@ -382,14 +366,7 @@ fn on_random_looping_sound_player_removed(
         error!("Random sound does not exist");
         return;
     };
-    let Some(data) = load_sound(
-        &mut *rng,
-        &audio_sample_assets,
-        &sample_rate,
-        &sound_config,
-        packet,
-        &sound,
-    ) else {
+    let Some(data) = load_sound(&mut *rng, &sample_rate, &sound_config, packet, &sound) else {
         return;
     };
 
@@ -441,7 +418,6 @@ fn on_spatial_sound_effect_added(
     add: On<Add, SpatialSoundEffect>,
     mut commands: Commands,
     mut rng: Single<&mut WyRand, With<GlobalRng>>,
-    audio_sample_assets: Res<Assets<AudioSample>>,
     sample_rate: Res<SampleRate>,
     sound_config: Res<SoundConfig>,
     spatial_settings: Res<SpatialSoundEffectSettings>,
@@ -482,7 +458,6 @@ fn on_spatial_sound_effect_added(
         SfxType::RandomLooping => play_random_looping_sound_effect(
             commands.reborrow(),
             &mut rng,
-            &audio_sample_assets,
             &sample_rate,
             &sound_config,
             packet_handle,
