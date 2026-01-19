@@ -25,7 +25,7 @@
 //#-----
 //#     SAMPLE: 238056_4183089-lq
 //#     FREQ: 44100
-//#     FREQDEV: 9999
+//#     FREQDEV: 99
 //#     VOLUME: 0
 //#     LOOP: 0
 //#     ATTACK: 0
@@ -104,7 +104,7 @@
 //#     RELEASE: 0
 //#-----
 //#     SAMPLE: 238056_4183089-lq
-//#     FREQ: 11050
+//#     FREQ: 44100
 //#     FREQDEV: 7777
 //#     VOLUME: 0
 //#     LOOP: 0
@@ -112,8 +112,8 @@
 //#     RELEASE: 0
 //#-----
 //#     SAMPLE: 238056_4183089-lq
-//#     FREQ: 16050
-//#     FREQDEV: 6666
+//#     FREQ: 44100
+//#     FREQDEV: 66
 //#     VOLUME: 0
 //#     LOOP: 0
 //#     ATTACK: 0
@@ -121,7 +121,7 @@
 //#-----
 //#     SAMPLE: 238056_4183089-lq
 //#     FREQ: 44100
-//#     FREQDEV: 5555
+//#     FREQDEV: 55
 //#     VOLUME: 0
 //#     LOOP: 0
 //#     ATTACK: 0
@@ -136,15 +136,15 @@
 //#     RELEASE: 0
 //#-----
 //#     SAMPLE: 98447_505301-lq
-//#     FREQ: 8050
-//#     FREQDEV: 1000
+//#     FREQ: 44100
+//#     FREQDEV: 10
 //#     VOLUME: 0
 //#     LOOP: 0
 //#     ATTACK: 0
 //#     RELEASE: 0
 //#-----
 //#     SAMPLE: 98447_505301-lq
-//#     FREQ: 11050
+//#     FREQ: 44100
 //#     FREQDEV: 1000
 //#     VOLUME: 0
 //#     LOOP: 0
