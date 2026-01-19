@@ -105,6 +105,14 @@ impl SpatialSoundEffectSettings {
     }
 }
 
+/// Spawn an entity with this component to play a sound effect specified by the
+/// given key.
+///
+/// If you want to spawn a spatial sound effect, instead spawn an entity with
+/// [`SpatialSoundEffect`], or add it to your existing entity.
+///
+/// TODO: In the future we might try and consolidate these two so callers just
+/// have to do one and then indicate if they want spatial or not.
 #[derive(Component)]
 #[cfg_attr(feature = "debug", derive(Debug))]
 #[cfg_attr(feature = "reflect", derive(Reflect), reflect(Component))]
