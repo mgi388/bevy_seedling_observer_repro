@@ -1,0 +1,129 @@
+[workspace]
+resolver = "2"
+members = ["crates/*"]
+
+[workspace.package]
+publish = false
+edition = "2024"
+
+[workspace.lints.clippy]
+allow_attributes_without_reason = "warn"
+too_many_arguments = "allow"
+type_complexity = "allow"
+
+[workspace.lints.rust]
+
+[workspace.dependencies]
+# Member dependencies.
+bevy_app_ext = { path = "crates/bevy_app_ext", default-features = false }
+dev_tools = { path = "crates/dev_tools", default-features = false }
+sound_asset = { path = "crates/sound_asset", default-features = false }
+sound_config = { path = "crates/sound_config", default-features = false }
+sound_effect = { path = "crates/sound_effect", default-features = false }
+
+# External dependencies: Bevy engine.
+bevy = { version = "0.17", default-features = false }
+bevy_app = "0.17"
+bevy_asset = "0.17"
+bevy_audio = { version = "0.17", default-features = false, features = ["wav"] }
+bevy_camera = "0.17"
+bevy_color = "0.17"
+bevy_core_pipeline = "0.17"
+bevy_derive = "0.17"
+bevy_dev_tools = "0.17"
+bevy_ecs = "0.17"
+bevy_gizmos = "0.17"
+bevy_gltf = "0.17"
+bevy_image = "0.17"
+bevy_input = "0.17"
+bevy_input_focus = "0.17"
+bevy_internal = "0.17"
+bevy_light = "0.17"
+bevy_math = "0.17"
+bevy_mesh = "0.17"
+bevy_pbr = "0.17"
+bevy_picking = "0.17"
+bevy_platform = "0.17"
+bevy_reflect = "0.17"
+bevy_reflect_derive = "0.17"
+bevy_render = "0.17"
+bevy_shader = "0.17"
+bevy_sprite = "0.17"
+bevy_state = "0.17"
+bevy_text = "0.17"
+bevy_time = "0.17"
+bevy_transform = "0.17"
+bevy_ui = "0.17"
+bevy_ui_render = "0.17"
+bevy_utils = "0.17"
+bevy_window = "0.17"
+bevy_winit = "0.17"
+
+# External dependencies: Other.
+bevy_args = "2"
+bevy_asset_loader = { version = "0.24", features = [
+  "2d",
+  "standard_dynamic_assets",
+] }
+bevy_editor_cam = "0.7"
+bevy_egui = { version = "0.38", default-features = false }
+bevy_enhanced_input = "0.20"
+bevy_infinite_grid = "0.17"
+bevy_kira_audio = { version = "0.24", default-features = false, features = [
+  "wav",
+] }
+bevy_rand = { version = "0.12", features = ["wyrand"] }
+bevy_seedling = { version = "0.6", default-features = false, features = [
+  "stream",
+  "wav",
+  "ogg",
+  "rand",
+  "loudness",
+  "mp3",
+] }
+bevy-inspector-egui = { version = "0.35", default-features = false, features = [
+  "bevy_core_pipeline",
+  "bevy_image",
+  "bevy_pbr",
+  "bevy_render",
+  "egui_clipboard",
+] }
+clap = { version = "4.5", features = ["derive"] }
+darkomen = { version = "0.4", default-features = false, features = ["asset"] }
+derive_more = { version = "2", default-features = false, features = [
+  "display",
+  "error",
+  "from",
+] }
+firewheel = { version = "0.9.0", default-features = false }
+log = { version = "0.4", features = [
+  "max_level_trace",
+  "release_max_level_warn",
+] }
+rand = "0.9"
+ron = "0.12"
+serde = { version = "1", features = ["rc"] }
+serde_json = "1"
+symphonia = { version = "0.5", default-features = false }
+symphonium = { version = "0.6", default-features = false }
+tracing = { version = "0.1", default-features = false, features = [
+  "attributes",
+  "max_level_trace",
+  "release_max_level_warn",
+] }
+
+# Compile with Performance Optimizations:
+# https://bevyengine.org/learn/quick-start/getting-started/setup/#compile-with-performance-optimizations
+
+# Enable a small amount of optimization in the dev profile.
+[profile.dev]
+opt-level = 1
+
+# Enable a large amount of optimization in the dev profile for dependencies.
+[profile.dev.package."*"]
+opt-level = 3
+
+# Remove expensive debug assertions due to [expensive debug assertions
+# introduced in Bevy 0.14](https://github.com/bevyengine/bevy/issues/14291).
+[profile.dev.package.wgpu-types]
+debug-assertions = false

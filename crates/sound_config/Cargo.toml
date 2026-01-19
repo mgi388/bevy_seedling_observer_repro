@@ -1,0 +1,29 @@
+[package]
+name = "sound_config"
+version = "0.1.0"
+edition.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true
+
+[features]
+debug = []
+default = [
+  "dev_native", # Default to a native dev build.
+]
+dev = []
+dev_native = ["dev"]
+reflect = []
+
+[dependencies]
+# Member dependencies.
+
+# External dependencies: Bevy engine.
+bevy_app.workspace = true
+bevy_ecs.workspace = true
+bevy_reflect.workspace = true
+
+# External dependencies: Other.
+bevy_kira_audio.workspace = true
+serde.workspace = true
