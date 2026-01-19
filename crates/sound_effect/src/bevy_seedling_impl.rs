@@ -16,6 +16,7 @@ use bevy_seedling::{
     prelude::*,
     sample_effects,
 };
+use bevy_time::prelude::*;
 use bevy_transform::prelude::*;
 use darkomen::prelude::*;
 use rand::Rng;
@@ -58,6 +59,8 @@ impl<SoundEffectKeyT: SoundEffectKeyRequirements> Plugin for SoundEffectPlugin<S
         app.add_observer(on_sound_effect_player_added::<SoundEffectKeyT>);
         app.add_observer(on_random_looping_sound_player_removed);
         app.add_observer(on_spatial_sound_effect_added);
+
+        app.add_systems(Update, count_nodes);
     }
 }
 
@@ -443,5 +446,27 @@ fn on_spatial_sound_effect_added(
             Some(&*spatial_settings),
         ),
         _ => panic!("Sound effect type not supported yet"),
+    }
+}
+
+fn count_nodes(
+    time: Res<Time>,
+    volume_nodes: Query<&VolumeNode>,
+    spatial_nodes: Query<(Entity, &SpatialBasicNode)>,
+    mut timer: Local<Option<Timer>>,
+) {
+    let timer = timer.get_or_insert_with(|| Timer::from_seconds(1.0, TimerMode::Repeating));
+
+    timer.tick(time.delta());
+    if timer.just_finished() {
+        let volume_count = volume_nodes.iter().count();
+        let spatial_count = spatial_nodes.iter().count();
+        let mut spatial_entities: Vec<Entity> =
+            spatial_nodes.iter().map(|(entity, _)| entity).collect();
+        spatial_entities.sort();
+        info!(
+            "Audio nodes - Volume: {}, SpatialBasic: {} ({:?})",
+            volume_count, spatial_count, spatial_entities
+        );
     }
 }
