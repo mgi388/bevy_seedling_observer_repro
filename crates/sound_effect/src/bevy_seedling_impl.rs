@@ -330,15 +330,16 @@ fn on_random_looping_sound_player_removed(
     mut rng: Single<&mut WyRand, With<GlobalRng>>,
     sample_rate: Res<SampleRate>,
     sound_config: Res<SoundConfig>,
+    spatial_settings: Res<SpatialSoundEffectSettings>,
     packet_assets: Res<Assets<PacketAsset>>,
-    child_query: Query<&ChildOf, With<RandomLoopingSoundPlayerMarker>>,
+    child_of_query: Query<&ChildOf, With<RandomLoopingSoundPlayerMarker>>,
     parent_query: Query<
         (&PacketAssetHandle, &SoundEffectId, Has<SpatialAudio>),
         With<RandomLoopingSoundEffect>,
     >,
 ) {
     // Check if the removed entity is a random looping sound player child.
-    let Ok(child_of) = child_query.get(remove.entity) else {
+    let Ok(child_of) = child_of_query.get(remove.entity) else {
         return;
     };
 
@@ -370,31 +371,17 @@ fn on_random_looping_sound_player_removed(
 
     let playback_settings = data.playback_settings.with_on_complete(OnComplete::Remove);
 
-    if spatial {
-        // For spatial sounds, just replace the SamplePlayer and PlaybackSettings
-        // components on the existing child entity. This preserves the SpatialBasicNode
-        // and avoids recreating the audio effect nodes.
+    commands.entity(remove.entity).try_despawn();
+    spawn_random_looping_sound_player_child(
+        &mut commands,
+        parent_entity,
         #[cfg(feature = "entity_names")]
-        commands
-            .entity(remove.entity)
-            .try_insert(Name::new(sound.file_stem.clone()));
-        commands
-            .entity(remove.entity)
-            .try_insert((data.sample_player, playback_settings));
-    } else {
-        // For non-spatial sounds, despawn the old child and spawn a new one.
-        commands.entity(remove.entity).try_despawn();
-        spawn_random_looping_sound_player_child(
-            &mut commands,
-            parent_entity,
-            #[cfg(feature = "entity_names")]
-            sound.file_stem.clone(),
-            data.sample_player,
-            playback_settings,
-            false,
-            None,
-        );
-    }
+        sound.file_stem.clone(),
+        data.sample_player,
+        playback_settings,
+        spatial,
+        Some(&*spatial_settings),
+    );
 
     debug!(sound = sound.file_stem, "Playing next random looping sound");
 }
