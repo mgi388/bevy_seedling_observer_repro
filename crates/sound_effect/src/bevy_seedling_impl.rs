@@ -53,7 +53,6 @@ impl<SoundEffectKeyT: SoundEffectKeyRequirements> Plugin for SoundEffectPlugin<S
 
             app.register_type::<SoundEffectPlayer<SoundEffectKeyT>>();
             app.register_type::<RandomLoopingSoundPlayerMarker>();
-            app.register_type::<SpatialAudio>();
         }
 
         app.add_observer(on_sound_effect_player_added::<SoundEffectKeyT>);
@@ -334,11 +333,12 @@ fn on_random_looping_sound_player_removed(
     packet_assets: Res<Assets<PacketAsset>>,
     child_of_query: Query<&ChildOf, With<RandomLoopingSoundPlayerMarker>>,
     parent_query: Query<
-        (&PacketAssetHandle, &SoundEffectId, Has<SpatialAudio>),
+        (&PacketAssetHandle, &SoundEffectId, Has<SpatialSoundEffect>),
         With<RandomLoopingSoundEffect>,
     >,
 ) {
-    // Check if the removed entity is a random looping sound player child.
+    // Check if the removed entity is a random looping sound player child (at
+    // the least, it needs a parent to be so)
     let Ok(child_of) = child_of_query.get(remove.entity) else {
         return;
     };
@@ -346,7 +346,7 @@ fn on_random_looping_sound_player_removed(
     let parent_entity = child_of.parent();
 
     // Get the parent's packet and sound effect info.
-    let Ok((packet_handle, sound_effect_id, spatial)) = parent_query.get(parent_entity) else {
+    let Ok((packet_handle, sound_effect_id, is_spatial)) = parent_query.get(parent_entity) else {
         // Parent might have been despawned, that's fine.
         return;
     };
@@ -379,24 +379,12 @@ fn on_random_looping_sound_player_removed(
         sound.file_stem.clone(),
         data.sample_player,
         playback_settings,
-        spatial,
+        is_spatial,
         Some(&*spatial_settings),
     );
 
     debug!(sound = sound.file_stem, "Playing next random looping sound");
 }
-
-/// Marker component indicating that child sound players should use spatial
-/// audio (3D positioned sound).
-///
-/// TODO: Check if we need this component or if we can just use the existing
-/// spatial component. We already have SpatialSoundEffect component on this
-/// entity so what is the difference?
-#[derive(Clone, Component, Copy, Default)]
-#[cfg_attr(feature = "debug", derive(Debug))]
-#[cfg_attr(feature = "reflect", derive(Reflect), reflect(Component, Default))]
-#[cfg_attr(all(feature = "reflect", feature = "debug"), reflect(Debug))]
-struct SpatialAudio;
 
 #[cfg_attr(feature = "instrument", tracing::instrument(skip_all))]
 fn on_spatial_sound_effect_added(
@@ -433,12 +421,6 @@ fn on_spatial_sound_effect_added(
         return;
     };
 
-    // Insert the marker so child spawning functions know to add spatial
-    // effects.
-    commands.entity(add.entity).try_insert(SpatialAudio);
-
-    // Dispatch to the appropriate play function based on SfxType.
-    // The play functions will check for SpatialAudio and add spatial effects.
     match sound_effect.typ {
         SfxType::RandomLooping => play_random_looping_sound_effect(
             commands.reborrow(),
