@@ -1,0 +1,81 @@
+[package]
+name = "sound_effect"
+version = "0.1.0"
+edition.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true
+
+[features]
+debug = [
+  # Member features.
+  "sound_config/debug",
+
+  # External dependencies: Other.
+  "darkomen/debug",
+]
+default = [
+  "dev_native", # Default to a native dev build.
+]
+dev = [
+  # Member features.
+  "sound_config/dev",
+
+  # External dependencies: Other features.
+
+  "entity_names",
+  "instrument",
+]
+dev_native = ["dev"]
+entity_names = []
+instrument = []
+reflect = [
+  # Member features.
+  "sound_config/reflect",
+
+  # External dependencies: Other.
+  "bevy_seedling/reflect",
+  "darkomen/bevy_reflect",
+]
+
+[dependencies]
+# Member dependencies.
+bevy_app_ext.workspace = true
+sound_config.workspace = true
+
+# External dependencies: Bevy engine.
+bevy.workspace = true                              # TODO: Needed for bevy_asset_loader, see https://github.com/NiklasEi/bevy_asset_loader/issues/219.
+bevy_app.workspace = true
+bevy_asset.workspace = true
+bevy_ecs.workspace = true
+bevy_platform.workspace = true
+bevy_reflect.workspace = true
+bevy_time.workspace = true
+bevy_transform.workspace = true
+
+# External dependencies: Other.
+bevy_asset_loader.workspace = true
+bevy_derive.workspace = true
+bevy_rand.workspace = true
+bevy_seedling.workspace = true
+darkomen.workspace = true
+derive_more.workspace = true
+rand.workspace = true
+serde.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+# Member dependencies.
+dev_tools.workspace = true
+
+# External dependencies: Bevy engine.
+bevy = { workspace = true, default-features = true }
+
+# External dependencies: Other.
+bevy_args.workspace = true
+bevy_asset_loader.workspace = true
+bevy_editor_cam.workspace = true
+bevy_enhanced_input.workspace = true
+bevy_infinite_grid.workspace = true
+clap.workspace = true

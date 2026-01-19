@@ -79,7 +79,6 @@ bevy_seedling = { version = "0.6", default-features = false, features = [
   "ogg",
   "rand",
   "loudness",
-  "mp3",
 ] }
 bevy-inspector-egui = { version = "0.35", default-features = false, features = [
   "bevy_core_pipeline",
