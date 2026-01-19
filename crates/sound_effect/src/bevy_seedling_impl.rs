@@ -233,8 +233,6 @@ fn play_random_looping_sound_effect(
         return;
     };
 
-    // For random looping, we use RemoveComponents so we can detect when the
-    // sound ends and play a new random sound.
     let playback_settings = data.playback_settings.with_on_complete(OnComplete::Remove);
 
     commands.entity(entity).try_insert((
