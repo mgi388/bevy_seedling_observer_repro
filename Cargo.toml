@@ -73,7 +73,7 @@ bevy_kira_audio = { version = "0.24", default-features = false, features = [
   "wav",
 ] }
 bevy_rand = { version = "0.12", features = ["wyrand"] }
-bevy_seedling = { version = "0.6", default-features = false, features = [
+bevy_seedling = { git = "https://github.com/CorvusPrudens/bevy_seedling.git", rev = "39c918e09d4e57c5782141641cdc92a952c3bc69", default-features = false, features = [
   "stream",
   "wav",
   "ogg",
