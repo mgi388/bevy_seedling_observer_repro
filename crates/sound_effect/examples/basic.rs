@@ -1,11 +1,14 @@
+#[path = "../helpers/camera_controller.rs"]
+mod camera_controller;
+
 use bevy::{color::palettes::tailwind::*, prelude::*, render::view::Hdr};
 use bevy_app_ext::prelude::*;
 use bevy_args::{BevyArgsPlugin, Deserialize, Parser, Serialize};
 use bevy_asset_loader::prelude::*;
-use bevy_editor_cam::prelude::*;
 use bevy_enhanced_input::prelude::*;
 use bevy_infinite_grid::{InfiniteGridBundle, InfiniteGridPlugin};
 use bevy_seedling::spatial::SpatialListener3D;
+use camera_controller::{EditorCameraController, EditorCameraPlugin};
 use dev_tools::prelude::*;
 use sound_config::prelude::*;
 use sound_effect::prelude::*;
@@ -88,6 +91,12 @@ fn setup_scene(mut commands: Commands) {
     let camera_transform =
         Transform::from_translation(Vec3::new(-5.0, 5.0, 0.0)).looking_at(Vec3::ZERO, Vec3::Y); // looking at origin
 
+    let mut controller = EditorCameraController::default();
+
+    let (yaw, pitch, _) = camera_transform.rotation.to_euler(EulerRot::YXZ);
+    controller.yaw = yaw;
+    controller.pitch = pitch;
+
     commands.spawn((
         Name::new("Editor camera"),
         DespawnOnExit(State::Loaded),
@@ -97,7 +106,7 @@ fn setup_scene(mut commands: Commands) {
             ..Default::default()
         },
         Hdr,
-        EditorCam::default(),
+        controller,
         camera_transform,
         SpatialListener3D,
     ));
@@ -180,7 +189,7 @@ fn main() {
 
     app.add_plugins(InspectorPlugin);
     app.add_plugins(InfiniteGridPlugin);
-    app.add_plugins(DefaultEditorCamPlugins);
+    app.add_plugins(EditorCameraPlugin);
 
     app.try_add_plugins(EnhancedInputPlugin);
 

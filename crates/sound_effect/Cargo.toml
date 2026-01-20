@@ -75,7 +75,6 @@ bevy = { workspace = true, default-features = true }
 # External dependencies: Other.
 bevy_args.workspace = true
 bevy_asset_loader.workspace = true
-bevy_editor_cam.workspace = true
 bevy_enhanced_input.workspace = true
 bevy_infinite_grid.workspace = true
 clap.workspace = true

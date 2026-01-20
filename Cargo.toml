@@ -65,7 +65,6 @@ bevy_asset_loader = { version = "0.24", features = [
   "2d",
   "standard_dynamic_assets",
 ] }
-bevy_editor_cam = "0.7"
 bevy_egui = { version = "0.38", default-features = false }
 bevy_enhanced_input = "0.20"
 bevy_infinite_grid = "0.17"
